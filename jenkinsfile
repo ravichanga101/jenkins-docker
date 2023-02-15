@@ -1,35 +1,37 @@
 pipeline {
-  agent any
-  options {
-    buildDiscarder(logRotator(numToKeepStr: '5'))
-  }
-  environment {
-    DOCKERHUB_CREDENTIALS = credentials('dockerhub')
-  }
-  stages {
-    stage('Build') {
-      steps {
-        sh 'docker build -t ravifromchanga/jenkins-docker-hub .'
-      }
-    }
-    stage('Login') {
-      steps {
-        sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-      }
-    }
-    stage('Push') {
-      steps {
-        sh 'docker push ravifromchanga/jenkins-docker-hub'
-      }
-    }
-  }
-  post {
-    always {
-          agent any
-            {
-                sh 'docker logout'
+    agent none
+    stages {
+        stage('Build') {
+            agent {
+                docker {
+                    image 'maven:3.8.3-openjdk-17-slim'
+                    args '-v /root/.m2:/root/.m2'
+                }
             }
-      
+            steps {
+                sh 'mvn -B -DskipTests clean package'
+                sh 'docker build -t my-image .'
+            }
+        }
+        stage('Push') {
+            agent {
+                docker {
+                    image 'docker:20.10.9'
+                    args '-u root'
+                }
+            }
+            steps {
+                withCredentials([string(credentialsId: 'dockerhub', variable: 'DOCKER_PASSWORD')]) {
+                    sh 'echo $DOCKER_PASSWORD | docker login --username myusername --password-stdin'
+                    sh 'docker tag my-image ravifromchanga/my-repo:latest'
+                    sh 'docker push ravifromchanga/my-repo:latest'
+                }
+            }
+        }
     }
-  }
+    post {
+        always {
+            sh 'docker logout'
+        }
+    }
 }
