@@ -1,34 +1,24 @@
 pipeline {
-    agent none
+    agent any
+
     stages {
         stage('Build') {
-            agent {
-                docker {
-                    image 'maven:3.8.3-openjdk-17-slim'
-                    args '-v /root/.m2:/root/.m2'
-                }
-            }
             steps {
-                sh 'mvn -B -DskipTests clean package'
                 sh 'docker build -t my-image .'
             }
         }
+
         stage('Push') {
-            agent {
-                docker {
-                    image 'docker:20.10.9'
-                    args '-u root'
-                }
-            }
             steps {
-                withCredentials([string(credentialsId: 'dockerhub', variable: 'DOCKER_PASSWORD')]) {
-                    sh 'echo $DOCKER_PASSWORD | docker login --username myusername --password-stdin'
-                    sh 'docker tag my-image ravifromchanga/my-repo:latest'
-                    sh 'docker push ravifromchanga/my-repo:latest'
+                withDockerRegistry([url: "https://hub.docker.com/v2/", credentialsId: "dockerhub"]) {
+                    sh 'echo $DOCKER_REGISTRY_USER'
+                    sh 'echo $DOCKER_REGISTRY_PASSWORD | docker login -u $DOCKER_REGISTRY_USER --password-stdin'
+                    sh 'docker push my-image'
                 }
             }
         }
     }
+
     post {
         always {
             sh 'docker logout'
