@@ -1,0 +1,45 @@
+repo_name: ravichanga101/jenkins-docker
+report_id: 128ac38ae8d9cb81cefe141f2e020f94
+version: 0.1
+repo_type: Public
+timestamp: '2024-01-31T08:26:46+00:00'
+requested_by: ravichanga101
+provider: github
+branch: main
+detected_tools_count: 3
+tools:
+- name: Docker
+  description: Enterprise Container Platform for High-Velocity Innovation.
+  website_url: https://www.docker.com/
+  license: Apache-2.0
+  open_source: true
+  hosted_saas: false
+  category: Build, Test, Deploy
+  sub_category: Virtual Machine Platforms & Containers
+  image_url: https://img.stackshare.io/service/586/n4u37v9t_400x400.png
+  detection_source_url: https://github.com/ravichanga101/jenkins-docker
+  detection_source: Repo Metadata
+- name: Git
+  description: Fast, scalable, distributed revision control system
+  website_url: http://git-scm.com/
+  open_source: true
+  hosted_saas: false
+  category: Build, Test, Deploy
+  sub_category: Version Control System
+  image_url: https://img.stackshare.io/service/1046/git.png
+  detection_source_url: https://github.com/ravichanga101/jenkins-docker
+  detection_source: Repo Metadata
+- name: Alpine Linux
+  description: Security-oriented, lightweight Linux distribution based on musl libc
+    and busybox
+  website_url: https://www.alpinelinux.org/
+  version: 3.13.0
+  open_source: false
+  hosted_saas: false
+  category: Languages & Frameworks
+  sub_category: Operating Systems
+  image_url: https://img.stackshare.io/service/6429/alpine_linux.png
+  detection_source_url: https://github.com/ravichanga101/jenkins-docker/blob/main/Dockerfile
+  detection_source: Dockerfile
+  last_updated_by: Ravi Patel
+  last_updated_on: 2023-02-15 16:50:11.000000000 Z
